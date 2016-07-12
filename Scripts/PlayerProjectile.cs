@@ -22,8 +22,10 @@ public class PlayerProjectile : MonoBehaviour {
 						DismemberReference=col.gameObject.GetComponentInParent<Dismemberment>();
 
 						DismemberReference.setAlive(false);
+						DismemberReference.setBodyHP(DismemberReference.getHP()-1);
 					}
 				}
+			if(DismemberReference.getHP()==0)
 			Destroy(col.gameObject);
 		}
 

@@ -7,6 +7,7 @@ public class Dismemberment : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		isAlive=true;
+		bodyHP=2;
 	}
 	
 	// Update is called once per frame
@@ -31,7 +32,16 @@ public class Dismemberment : MonoBehaviour {
 	public void setAlive(bool isAlive){
 		this.isAlive=isAlive;
 	}
+	public void setBodyHP(int bodyHP){
+		this.bodyHP=bodyHP;
+
+		if(this.bodyHP<0)
+			this.bodyHP=2;
+	}
 	public bool getAlive(){
 		return isAlive;
+	}
+	public int getHP(){
+		return bodyHP;
 	}
 }

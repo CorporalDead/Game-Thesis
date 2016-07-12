@@ -16,13 +16,15 @@ public class PlayerProjectile : MonoBehaviour {
 	void OnCollisionEnter(Collision col){
 		if(col.gameObject.tag=="Enemy"){
 			Rigidbody[] rb=col.gameObject.GetComponentsInParent<Rigidbody>();
-		//	DismemberReference=col.gameObject.GetComponentInParent<Dismemberment>();
 			foreach(Rigidbody JointRB in rb){
 				if(JointRB.gameObject.transform.parent!=null)
-					Debug.Log (JointRB.name);
+					if(JointRB.GetComponent<Dismemberment>()!=null){
+						DismemberReference=col.gameObject.GetComponentInParent<Dismemberment>();
+
+						DismemberReference.setAlive(false);
+					}
 				}
-			Debug.Log(col.gameObject.name);
-		//	Debug.Log("setAlive Value"+DismemberReference.getAlive());
+			Destroy(col.gameObject);
 		}
 
 		Destroy(gameObject);

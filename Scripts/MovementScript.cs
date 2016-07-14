@@ -33,6 +33,8 @@ public class MovementScript : MonoBehaviour {
 	private int timer;
 	// Use this for initialization
 	void Start () {
+		Cursor.visible=false;
+
 		playerController=GetComponent<CharacterController>();
 		playerCamera=gameObject.GetComponentInChildren<Camera>();
 		playerCamGO=GameObject.Find("PlayerCamera");
@@ -69,6 +71,7 @@ public class MovementScript : MonoBehaviour {
 				
 				if(playerCamera.fieldOfView<FieldOfViewValue+10f)
 					playerCamera.fieldOfView+=0.5f;
+
 			}else{
 				if(playerCamera.fieldOfView>FieldOfViewValue)
 					playerCamera.fieldOfView-=0.5f;
@@ -92,7 +95,7 @@ public class MovementScript : MonoBehaviour {
 
 				if(playerCamGO.transform.localEulerAngles.z>=345f&&playerCamGO.transform.localEulerAngles.z!=0f)
 					playerCamGO.transform.Rotate(0,0,1);
-
+				//check if player was wallrunning on the right side then correct the rotation
 				if(playerCamGO.transform.localEulerAngles.z<=345f&&playerCamGO.transform.localEulerAngles.z!=0f)
 					playerCamGO.transform.Rotate(0,0,-1);
 			}else{
@@ -111,7 +114,7 @@ public class MovementScript : MonoBehaviour {
 				}
 					if((playerCamGO.transform.localEulerAngles.z>=0f&&playerCamGO.transform.localEulerAngles.z<=1f)||playerCamGO.transform.localEulerAngles.z>=350f)
 						playerCamGO.transform.Rotate(0,0,-1);
-
+					//decrement runtimer so player does not wall run forever
 				runTimer-=Time.deltaTime;
 			}else
 			if(isWallRunningRight){
@@ -127,12 +130,14 @@ public class MovementScript : MonoBehaviour {
 					Direction.z+=5f;
 					Direction = transform.TransformDirection(Direction);
 				}
+					//tilt camera to the right
 					if((playerCamGO.transform.localEulerAngles.z>=359f&&playerCamGO.transform.localEulerAngles.z<=359.9f)||playerCamGO.transform.localEulerAngles.z<=10f)
 						playerCamGO.transform.Rotate(0,0,1);
 
 				runTimer-=Time.deltaTime;
 			}
 		}
+			//force player to stop wallrunning 
 			if(runTimer<0){
 				isJumping=false;
 				runTimer=0.5f;
@@ -172,8 +177,6 @@ public class MovementScript : MonoBehaviour {
 		CarryMethod();
 		//creating projectiles
 		ProjectileMaker();
-		//wall running and vaulting
-		//Debug.Log(playerCamGO.transform.localEulerAngles.z);
 	}
 	
 	void OnCollisionStay(Collision col){
@@ -222,19 +225,28 @@ public class MovementScript : MonoBehaviour {
 				Destroy(Projectile,3);
 			}
 	}
+
 			if(Input.GetButtonDown("Fire2")){
-				if(!Aiming)
+				if(!Aiming){
 					Aiming=true;
+					
+				if(playerCamera.fieldOfView>FieldOfViewValue-20f)
+					playerCamera.fieldOfView-=20f;
+			}
 				else
-					if(Aiming)
+					if(Aiming){
 						Aiming=false;
-		}
+
+					if(playerCamera.fieldOfView<FieldOfViewValue)
+						playerCamera.fieldOfView+=20f;
+			}
+
 		if(Aiming)
 			GameObject.Find("KrissVector").transform.position = GameObject.Find("AimPoint").transform.position;
 		else
 			if(!Aiming)
 				GameObject.Find("KrissVector").transform.position = GameObject.Find("HipFire").transform.position;
-
+		}
 		timer++;
 }
 	void grapplingHook(){

@@ -4,6 +4,7 @@ using System.Collections;
 
 public class MovementScript : MonoBehaviour {
 	public GameObject ProjectileTest;
+	public GameObject WeaponOnHand;
 	
 	private CharacterController playerController;
 	private Transform playerTransform;
@@ -28,6 +29,8 @@ public class MovementScript : MonoBehaviour {
 	private bool jumpedFromRight;
 	private bool pointA;
 	private bool pointB;
+	private bool Aiming;
+	private int timer;
 	// Use this for initialization
 	void Start () {
 		playerController=GetComponent<CharacterController>();
@@ -40,6 +43,7 @@ public class MovementScript : MonoBehaviour {
 		playerSpeed=3f;
 		playerJumpSpeed=5f;
 		runTimer=0.5f;
+		timer=0;
 	}
 	
 	// Update is called once per frame
@@ -62,11 +66,10 @@ public class MovementScript : MonoBehaviour {
 			//Character Sprint
 			if(Input.GetButton("Sprint")&&ForwardBackward>0){
 				ForwardBackward+=playerSpeed;
-			//increase fov when player is running
+				
 				if(playerCamera.fieldOfView<FieldOfViewValue+10f)
 					playerCamera.fieldOfView+=0.5f;
 			}else{
-				//normalize fov when player is not running
 				if(playerCamera.fieldOfView>FieldOfViewValue)
 					playerCamera.fieldOfView-=0.5f;
 			}
@@ -86,17 +89,16 @@ public class MovementScript : MonoBehaviour {
 				Direction.y-=20f*Time.deltaTime;
 				isJumping=false;
 				runTimer=0.5f;
-				
-				//check if player was wallrunning on the left side then correct the rotation
+
 				if(playerCamGO.transform.localEulerAngles.z>=345f&&playerCamGO.transform.localEulerAngles.z!=0f)
 					playerCamGO.transform.Rotate(0,0,1);
-				//check if player was wallrunning on the right side then correct the rotation
+
 				if(playerCamGO.transform.localEulerAngles.z<=345f&&playerCamGO.transform.localEulerAngles.z!=0f)
 					playerCamGO.transform.Rotate(0,0,-1);
 			}else{
 				if(isWallRunningLeft){
 					if(Input.GetButtonDown("Jump")){
-						Debug.Log("Jump On");
+						//Debug.Log("Jump On");
 						jumpedFromLeft=true;
 						
 						Direction.y+=2f;
@@ -107,15 +109,14 @@ public class MovementScript : MonoBehaviour {
 						Direction.z+=5f;
 						Direction = transform.TransformDirection(Direction);
 				}
-					//tilt camera to the left
 					if((playerCamGO.transform.localEulerAngles.z>=0f&&playerCamGO.transform.localEulerAngles.z<=1f)||playerCamGO.transform.localEulerAngles.z>=350f)
 						playerCamGO.transform.Rotate(0,0,-1);
-				//decrement runtimer so player does not wall run forever
+
 				runTimer-=Time.deltaTime;
 			}else
 			if(isWallRunningRight){
 				if(Input.GetButtonDown("Jump")){
-						Debug.Log("Jump off");
+						//Debug.Log("Jump off");
 					jumpedFromRight=true;
 					
 					Direction.y+=2f;
@@ -126,20 +127,18 @@ public class MovementScript : MonoBehaviour {
 					Direction.z+=5f;
 					Direction = transform.TransformDirection(Direction);
 				}
-				//tilt camera to the right
 					if((playerCamGO.transform.localEulerAngles.z>=359f&&playerCamGO.transform.localEulerAngles.z<=359.9f)||playerCamGO.transform.localEulerAngles.z<=10f)
 						playerCamGO.transform.Rotate(0,0,1);
 
 				runTimer-=Time.deltaTime;
 			}
 		}
-			//force player to stop wallrunning 
 			if(runTimer<0){
 				isJumping=false;
 				runTimer=0.5f;
 			}
 		}
-		//player will move at a given direction after everyframe
+
 		playerController.Move(Direction*Time.deltaTime);
 		
 		playerTransform.localEulerAngles=new Vector3(playerTransform.localEulerAngles.x,playerRotY,playerTransform.localEulerAngles.z);
@@ -174,7 +173,7 @@ public class MovementScript : MonoBehaviour {
 		//creating projectiles
 		ProjectileMaker();
 		//wall running and vaulting
-		Debug.Log(playerCamGO.transform.localEulerAngles.z);
+		//Debug.Log(playerCamGO.transform.localEulerAngles.z);
 	}
 	
 	void OnCollisionStay(Collision col){
@@ -214,13 +213,30 @@ public class MovementScript : MonoBehaviour {
 		}
 	}
 	void ProjectileMaker(){
-		if(Input.GetButtonDown("Fire1")){
-			Projectile=Instantiate(ProjectileTest,GameObject.Find("Barrel").transform.position,Quaternion.identity) as GameObject;
-			Projectile.GetComponent<Rigidbody>().AddForce(GameObject.Find("Barrel").transform.forward*5000);
-			Destroy(Projectile,3);
-		}
+		if(timer>=5){
+			if(Input.GetButton("Fire1")){
+				Projectile=Instantiate(ProjectileTest,GameObject.Find("Barrel").transform.position,Quaternion.identity) as GameObject;
+				Projectile.GetComponent<Rigidbody>().AddForce(GameObject.Find("Barrel").transform.forward*5000);
+			
+				timer=0;
+				Destroy(Projectile,3);
+			}
 	}
-	
+			if(Input.GetButtonDown("Fire2")){
+				if(!Aiming)
+					Aiming=true;
+				else
+					if(Aiming)
+						Aiming=false;
+		}
+		if(Aiming)
+			GameObject.Find("KrissVector").transform.position = GameObject.Find("AimPoint").transform.position;
+		else
+			if(!Aiming)
+				GameObject.Find("KrissVector").transform.position = GameObject.Find("HipFire").transform.position;
+
+		timer++;
+}
 	void grapplingHook(){
 		if(Input.GetButtonDown("Fire2")){
 			Debug.Log ("1");

@@ -3,10 +3,16 @@ using System.Collections;
 using System.Collections;
 
 public class MovementScript : MonoBehaviour {
+	public AudioClip WeaponFire;
+
 	public GameObject ProjectileTest;
 	public GameObject WeaponOnHand;
 
+	public bool isSprinting;
+
 	private PauseMenu PauseMenuReference;
+
+	private AudioSource WeaponFireSource;
 
 	private CharacterController playerController;
 	private Transform playerTransform;
@@ -31,17 +37,21 @@ public class MovementScript : MonoBehaviour {
 	private bool jumpedFromRight;
 	private bool pointA;
 	private bool pointB;
-	private bool Aiming;
+	public bool Aiming;
 	private int timer;
 	// Use this for initialization
 	void Start () {
 		Cursor.visible=false;
+		Cursor.lockState=CursorLockMode.Confined;
 
 		playerController=GetComponent<CharacterController>();
 		playerCamera=gameObject.GetComponentInChildren<Camera>();
 		playerCamGO=GameObject.Find("PlayerCamera");
 
 		PauseMenuReference=GetComponent<PauseMenu>();
+
+		WeaponFireSource=GetComponent<AudioSource>();
+		WeaponFireSource.clip=WeaponFire;
 
 		FieldOfViewValue=playerCamera.fieldOfView;
 		Direction=Vector3.zero;
@@ -69,7 +79,7 @@ public class MovementScript : MonoBehaviour {
 					playerRotX-=Input.GetAxis("Mouse Y")*1f;
 			
 			playerRotY+=Input.GetAxis("Mouse X")*1f;
-			
+
 			if(playerController.isGrounded){
 				//Character Sprint
 				if(Input.GetButton("Sprint")&&ForwardBackward>0){
@@ -78,9 +88,12 @@ public class MovementScript : MonoBehaviour {
 					if(playerCamera.fieldOfView<FieldOfViewValue+10f)
 						playerCamera.fieldOfView+=0.5f;
 
+					isSprinting=true;
 				}else{
 					if(playerCamera.fieldOfView>FieldOfViewValue)
 						playerCamera.fieldOfView-=0.5f;
+
+					isSprinting=false;
 				}
 				
 				Direction.y=0;
@@ -88,7 +101,7 @@ public class MovementScript : MonoBehaviour {
 				Direction=transform.TransformDirection(Direction);
 				
 				//Character Jump
-				if(Input.GetButtonDown("Jump")&&(!isWallRunningLeft||!isWallRunningRight)){
+				if(Input.GetKey(KeyCode.Space)&&(!isWallRunningLeft||!isWallRunningRight)){
 					Direction.y+=5f;
 					isJumping=true;
 				}
@@ -106,7 +119,7 @@ public class MovementScript : MonoBehaviour {
 						playerCamGO.transform.Rotate(0,0,-1);
 				}else{
 					if(isWallRunningLeft){
-						if(Input.GetButtonDown("Jump")){
+						if(Input.GetKeyDown(KeyCode.Space)){
 							//Debug.Log("Jump On");
 							jumpedFromLeft=true;
 							
@@ -124,7 +137,7 @@ public class MovementScript : MonoBehaviour {
 					runTimer-=Time.deltaTime;
 				}else
 				if(isWallRunningRight){
-					if(Input.GetButtonDown("Jump")){
+					if(Input.GetKeyDown(KeyCode.Space)){
 							//Debug.Log("Jump off");
 						jumpedFromRight=true;
 						
@@ -142,6 +155,7 @@ public class MovementScript : MonoBehaviour {
 
 					runTimer-=Time.deltaTime;
 				}
+					Direction.y-=3f*Time.deltaTime;
 			}
 				//force player to stop wallrunning 
 				if(runTimer<0){
@@ -151,7 +165,7 @@ public class MovementScript : MonoBehaviour {
 			}
 			//Turn the character to where the player is looking at after each frame.
 			playerController.Move(Direction*Time.deltaTime);
-			
+
 			playerTransform.localEulerAngles=new Vector3(playerTransform.localEulerAngles.x,playerRotY,playerTransform.localEulerAngles.z);
 			playerCamGO.transform.localEulerAngles= new Vector3(-(playerRotX),playerCamGO.transform.localEulerAngles.y,playerCamGO.transform.localEulerAngles.z);
 
@@ -162,7 +176,7 @@ public class MovementScript : MonoBehaviour {
 			Debug.DrawRay(playerCamGO.transform.position,playerCamGO.transform.right,Color.green);
 			
 			//check left side if player is touching a wall
-			if(Physics.Raycast(playerCamGO.transform.position,-(playerCamGO.transform.right),out leftRay,1)&&(isJumping&&Input.GetButton("Sprint"))){
+			if(Physics.Raycast(playerCamGO.transform.position,-(playerCamGO.transform.right),out leftRay,1.4f)&&(isJumping&&Input.GetButton("Sprint"))){
 				isWallRunningLeft=true;
 				isWallRunning=true;
 			}else{
@@ -171,7 +185,7 @@ public class MovementScript : MonoBehaviour {
 				isWallRunning=false;
 			}
 			//check right side if player is touching a wall
-			if(Physics.Raycast(playerCamGO.transform.position,playerCamGO.transform.right,out rightRay,1)&&(isJumping&&Input.GetButton("Sprint"))){
+			if(Physics.Raycast(playerCamGO.transform.position,playerCamGO.transform.right,out rightRay,1.4f)&&(isJumping&&Input.GetButton("Sprint"))){
 				isWallRunningRight=true;
 				isWallRunning=true;
 			}else{
@@ -184,6 +198,7 @@ public class MovementScript : MonoBehaviour {
 			//creating projectiles
 			ProjectileMaker();
 		}
+		Debug.Log ("Y:"+Direction.y+"Grounded"+playerController.isGrounded);
 	}
 	
 	void OnCollisionStay(Collision col){
@@ -225,14 +240,15 @@ public class MovementScript : MonoBehaviour {
 	void ProjectileMaker(){
 		if(timer>=5){
 			if(Input.GetButton("Fire1")){
+					WeaponFireSource.Play ();
+
 				Projectile=Instantiate(ProjectileTest,GameObject.Find("Barrel").transform.position,Quaternion.identity) as GameObject;
 				Projectile.GetComponent<Rigidbody>().AddForce(GameObject.Find("Barrel").transform.forward*5000);
-			
+
 				timer=0;
 				Destroy(Projectile,3);
 			}
 	}
-
 			if(Input.GetButtonDown("Fire2")){
 				if(!Aiming){
 					Aiming=true;

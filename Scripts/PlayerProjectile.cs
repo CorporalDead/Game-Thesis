@@ -9,7 +9,10 @@ public class PlayerProjectile : MonoBehaviour {
 	public GameObject LowerLegGib;
 	public GameObject UpperLegGib;
 
-	public GameObject blood;
+	public GameObject BloodSplatter;
+	public GameObject BloodParticleReference;
+
+	private GameObject blood;
 
 	private GameObject LeftForearm;
 	private GameObject LeftShoulder;
@@ -57,6 +60,8 @@ public class PlayerProjectile : MonoBehaviour {
 							
 							LeftForearm=Instantiate(ForearmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							DismemberReference.setLeftForearmActive(true);
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 					if(col.gameObject.name=="LeftClavicle"){
@@ -64,14 +69,16 @@ public class PlayerProjectile : MonoBehaviour {
 							LeftArm=Instantiate(ArmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							else
 								LeftShoulder=Instantiate(ShoulderGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
-							
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 
 					if(col.gameObject.name=="RightForearm"){
 							RightForearm=Instantiate(ForearmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							DismemberReference.setRightForearmActive(true);
-							
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 					if(col.gameObject.name=="RightClavicle"){
@@ -79,14 +86,16 @@ public class PlayerProjectile : MonoBehaviour {
 							RightArm=Instantiate(ArmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							else
 								RightShoulder=Instantiate(ShoulderGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
-							
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 
 					if(col.gameObject.name=="Chest"){
 						if(DismemberReference.getLeftForearmActive()&&DismemberReference.getRightForearmActive()){
 							Chest=Instantiate(ChestGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
-								
+								blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+								Destroy(blood,3);
 								Destroy(col.gameObject);
 						}
 					}
@@ -98,10 +107,14 @@ public class PlayerProjectile : MonoBehaviour {
 
 					if(col.gameObject.name=="LeftLeg"){
 							LeftUpperLeg=Instantiate(UpperLegGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 					if(col.gameObject.name=="RightLeg"){
 							RightUpperLeg=Instantiate(UpperLegGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							blood=Instantiate(BloodParticleReference,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							Destroy(blood,3);
 							Destroy(col.gameObject);
 					}
 				}
@@ -116,7 +129,7 @@ public class PlayerProjectile : MonoBehaviour {
 			if(Physics.Raycast(transform.position,-col.transform.forward,out bloodRay,3f)){
 
 				if(bloodRay.collider.tag=="BloodSurface"){
-					Instantiate(blood,bloodRay.point,Quaternion.FromToRotation(Vector3.up, bloodRay.normal));
+					Instantiate(BloodSplatter,bloodRay.point,Quaternion.FromToRotation(Vector3.up, bloodRay.normal));
 					Debug.Log(bloodRay.normal);
 				}
 			}	

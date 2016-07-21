@@ -9,6 +9,8 @@ public class PlayerProjectile : MonoBehaviour {
 	public GameObject LowerLegGib;
 	public GameObject UpperLegGib;
 
+	public GameObject blood;
+
 	private GameObject LeftForearm;
 	private GameObject LeftShoulder;
 	private GameObject LeftArm;
@@ -23,6 +25,8 @@ public class PlayerProjectile : MonoBehaviour {
 	private GameObject RightLowerLeg;
 
 	private GameObject Chest;
+
+	private bool isHit;
 
 	private Dismemberment DismemberReference;
 	// Use this for initialization
@@ -50,6 +54,7 @@ public class PlayerProjectile : MonoBehaviour {
 				
 				if(DismemberReference.getHP()==0){
 					if(col.gameObject.name=="LeftForearm"){
+							
 							LeftForearm=Instantiate(ForearmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							DismemberReference.setLeftForearmActive(true);
 							Destroy(col.gameObject);
@@ -59,12 +64,14 @@ public class PlayerProjectile : MonoBehaviour {
 							LeftArm=Instantiate(ArmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							else
 								LeftShoulder=Instantiate(ShoulderGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							
 							Destroy(col.gameObject);
 					}
 
 					if(col.gameObject.name=="RightForearm"){
 							RightForearm=Instantiate(ForearmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							DismemberReference.setRightForearmActive(true);
+							
 							Destroy(col.gameObject);
 					}
 					if(col.gameObject.name=="RightClavicle"){
@@ -72,18 +79,20 @@ public class PlayerProjectile : MonoBehaviour {
 							RightArm=Instantiate(ArmGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
 							else
 								RightShoulder=Instantiate(ShoulderGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
+							
 							Destroy(col.gameObject);
 					}
 
 					if(col.gameObject.name=="Chest"){
 						if(DismemberReference.getLeftForearmActive()&&DismemberReference.getRightForearmActive()){
 							Chest=Instantiate(ChestGib,col.gameObject.transform.position,col.gameObject.transform.rotation) as GameObject;
-							Destroy(col.gameObject);
+								
+								Destroy(col.gameObject);
 						}
 					}
 					if(col.gameObject.name=="Head"){
 						//add blood splatter for headshots
-
+							
 							Destroy(col.gameObject);
 					}
 
@@ -98,8 +107,19 @@ public class PlayerProjectile : MonoBehaviour {
 				}
 			}
 		}
-	}
+			RaycastHit bloodRay;
+			
+			Debug.Log("I love pkmns"+gameObject.name);
+			
+			Debug.DrawRay(transform.position,-col.transform.forward,Color.cyan);
+			
+			if(Physics.Raycast(transform.position,-col.transform.forward,out bloodRay,3f)){
+				if(bloodRay.collider.tag=="BloodSurface")
+					Instantiate(blood,bloodRay.point,bloodRay.collider.transform.rotation);
 
-		Destroy(gameObject);
+			
+		}	
+			Destroy(gameObject);
+		}
 	}
 }

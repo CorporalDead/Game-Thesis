@@ -114,11 +114,12 @@ public class PlayerProjectile : MonoBehaviour {
 			Debug.DrawRay(transform.position,-col.transform.forward,Color.cyan);
 			
 			if(Physics.Raycast(transform.position,-col.transform.forward,out bloodRay,3f)){
-				if(bloodRay.collider.tag=="BloodSurface")
-					Instantiate(blood,bloodRay.point,bloodRay.collider.transform.rotation);
 
-			
-		}	
+				if(bloodRay.collider.tag=="BloodSurface"){
+					Instantiate(blood,bloodRay.point,Quaternion.FromToRotation(Vector3.up, bloodRay.normal));
+					Debug.Log(bloodRay.normal);
+				}
+			}	
 			Destroy(gameObject);
 		}
 	}

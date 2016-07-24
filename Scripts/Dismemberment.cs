@@ -9,7 +9,8 @@ public class Dismemberment : MonoBehaviour {
 	private bool rightForearmActive;
 
 	private int bodyHP;
-
+		
+	private PlayerProjectile playerProjectileReference;
 	// Use this for initialization
 	void Start () {
 		isAlive=true;
@@ -18,25 +19,25 @@ public class Dismemberment : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		//variable used for finding rigid body component in each body part
 		Rigidbody[] rb=gameObject.GetComponentsInChildren<Rigidbody>();
 			
 			foreach(Rigidbody JointRB in rb){
 				if(JointRB.gameObject.transform.parent!=null&&isAlive){
+					//enable kinematic (character will not be affected by physics) if character is alive or if root joint is still present
 						JointRB.isKinematic=true;
 			}else
 				if(!isAlive){
+				//let physics affect character when it dies
 					JointRB.isKinematic=false;
 			}
 		}
+
+		//for debugging purposes; forcing kinematics
 		if(Input.GetKeyDown(KeyCode.Alpha1))
 			isAlive=false;
 		if(Input.GetKeyDown(KeyCode.Alpha2))
 			isAlive=true;
-
-		if(leftForearmActive&&rightForearmActive)
-			Debug.Log(":)");
-
-		Debug.Log("LeftFore: "+leftForearmActive+"     RightFore: "+rightForearmActive);
 	}
 	public void setLeftForearmActive(bool leftForearmActive){
 		this.leftForearmActive=leftForearmActive;

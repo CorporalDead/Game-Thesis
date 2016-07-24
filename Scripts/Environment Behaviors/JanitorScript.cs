@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class JanitorScript : MonoBehaviour {
 
+	public int GibletsCTR;
 	public int BloodSpriteCTR;
 
 	private PlayerProjectile projectileReference;
 
-	private List<GameObject> bloodSprites;
 	// Use this for initialization
 	void Start () {
-		bloodSprites=new List<GameObject>();	
+
 	}
 	
 	// Update is called once per frame

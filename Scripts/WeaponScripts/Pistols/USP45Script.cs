@@ -11,14 +11,14 @@ public class USP45Script:Weapon,IFireArms {
 	}
 	// Update is called once per frame
 	void Update () {
-		Debug.Log("Child:"+WeaponReference.damage+"Daddy:"+base.damage);
+		Debug.Log("Child:"+WeaponReference.damage);
 		Shoot();
 	}
 	public void Shoot(){
 		WeaponReference.damage=5f;	
 	}
 	public void Reload(){
-		Debug.Log("FUCK MEEEE; )))");
+
 	}
 	public void RecoilPattern(){
 	

@@ -19,7 +19,8 @@ public class WeaponPickUp : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.E))
 			PickUp();
-		
+
+		WeaponSwapping();
 	}
 
 	void PickUp(){
@@ -46,9 +47,26 @@ public class WeaponPickUp : MonoBehaviour {
 	}
 
 	void WeaponSwapping(){
+		if(Input.GetKeyDown(KeyCode.Alpha1)){
+			if(Primary!=null){
+				Primary.gameObject.SetActive(true);
+
+				if(Secondary!=null)
+					Secondary.gameObject.SetActive(false);
+//				Melee.gameObject.SetActive(false);
+//				Equipment.gameObject.SetActive(false);
+			}
+		}
+
 		if(Input.GetKeyDown(KeyCode.Alpha2)){
-			if(Secondary!=null)
+			if(Secondary!=null){
 				Secondary.gameObject.SetActive(true);
+
+				if(Primary!=null)
+					Primary.gameObject.SetActive(false);
+//				Melee.gameObject.SetActive(false);
+//				Equipment.gameObject.SetActive(false);
+			}
 		}
 	}
 }

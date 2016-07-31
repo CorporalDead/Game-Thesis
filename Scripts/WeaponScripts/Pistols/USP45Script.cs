@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class USP45Script:Weapon {
+public class USP45Script:Secondary{
 	Weapon WeaponReference;
 	// Use this for initialization
 	void Start(){
-		WeaponReference = new Weapon();
+		WeaponReference = new Secondary();
 
 	}
 	// Update is called once per frame
 	void Update () {
-		WeaponReference.Shoot(1,30,1,true); //Shoot(float damage, float rateOfFire, float recoilmodifier, bool isSemiAuto);
+		WeaponReference.Shoot(3000,1,10,true); //Shoot(float force,float damage, float rateOfFire, bool isSemiAuto);
+	
 	}
 }

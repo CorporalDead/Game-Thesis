@@ -3,22 +3,27 @@ using System.Collections;
 
 public class WeaponPickUp : MonoBehaviour {
 
-	private GameObject Primary;
-	private GameObject Secondary;
-	private GameObject Melee;
-	private GameObject Equipment;
+	private Transform Primary;
+	private Transform Secondary;
+	private Transform Melee;
+	private Transform Equipment;
 
 	private Transform CurrentWeapon;
+	private Transform PreviousWewapon;
+
+	private MonoBehaviour PickedUpWeaponInheritance;
 
 	private string WeaponName;
-	void Start () {
-	
-	}
-	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.E)){
-			RaycastHit hit;
+
+		if(Input.GetKeyDown(KeyCode.E))
+			PickUp();
+		
+	}
+
+	void PickUp(){
+		RaycastHit hit;
 
 			if(Physics.Raycast(transform.position,transform.forward,out hit,2f)){
 				Transform[] ParentTrans=hit.collider.GetComponentsInParent<Transform>();
@@ -26,13 +31,24 @@ public class WeaponPickUp : MonoBehaviour {
 						if(childTrans.gameObject.transform.parent==null){
 							if(childTrans.tag=="PickUpWep"){
 								Debug.Log(childTrans.name);
-			
-							CurrentWeapon=transform.FindChild(childTrans.name);
-							CurrentWeapon.gameObject.SetActive(true);
-						}
+								
+								Transform PickedUpWeapon=transform.FindChild(childTrans.name);
+								PickedUpWeaponInheritance=PickedUpWeapon.GetComponent<MonoBehaviour>();
+								
+								if(PickedUpWeaponInheritance is Primary)
+									Primary=PickedUpWeapon;
+								if(PickedUpWeaponInheritance is Secondary)
+									Secondary=PickedUpWeapon;
 					}
 				}
 			}
+		}
+	}
+
+	void WeaponSwapping(){
+		if(Input.GetKeyDown(KeyCode.Alpha2)){
+			if(Secondary!=null)
+				Secondary.gameObject.SetActive(true);
 		}
 	}
 }

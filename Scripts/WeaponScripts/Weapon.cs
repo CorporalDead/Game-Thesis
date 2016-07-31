@@ -2,21 +2,23 @@
 using System.Collections;
 
 public class Weapon : MonoBehaviour,IFireArms {
+	public GameObject Projectiles;
+
+	private GameObject PlayerProjectile;
+
 	internal AudioSource weaponFireClip;
 	internal float damage;
 	internal float rateOfFire;
 	internal float delayFireTime;
 	internal float reloadTime;
 	internal float recoilModifier;
-
-	void Update(){
-
-	}
-	public void Shoot(float damage,float rateOfFire, float recoilModifier, bool isSemiAuto){
+	
+	public void Shoot(float force,float damage,float rateOfFire, bool isSemiAuto){
 		if(isSemiAuto){
 			if(delayFireTime>rateOfFire){
 				if(Input.GetKeyDown(KeyCode.Mouse0)){
-					Debug.Log("bang");
+					PlayerProjectile=Instantiate(Resources.Load("Projectile"),GameObject.Find("Barrel").transform.position,Quaternion.identity) as GameObject;
+					PlayerProjectile.GetComponent<Rigidbody>().AddForce(GameObject.Find("Barrel").transform.forward*force);
 
 					delayFireTime=0;
 				}

@@ -2,14 +2,18 @@
 using System.Collections;
 
 public class KrissVectorScript : Primary {
-	Weapon WeaponReference;
+
 	// Use this for initialization
 	void Start () {
-		WeaponReference=new Primary();
+		MagazineCapacity=30;
+		AmmoSum=300;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		WeaponReference.Shoot (5000,2,5,false);
+		Shoot (5000,2,5,false);
+	
+
+		Debug.Log(""+MagazineCapacity);
 	}
 }

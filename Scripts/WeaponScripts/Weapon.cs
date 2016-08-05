@@ -13,8 +13,16 @@ public class Weapon : MonoBehaviour,IFireArms {
 	internal float delayFireTime;
 	internal float reloadTime;
 	internal float recoilModifier;
+
 	internal int MagazineCapacity;
 	internal int AmmoSum;
+
+	internal int InitialMagCap;
+
+	internal int DeductedFromSum;
+	void Start(){
+		InitialMagCap=MagazineCapacity;
+	}
 
 	public void Shoot(float force,float damage,float rateOfFire, bool isSemiAuto){
 		if(isSemiAuto&&MagazineCapacity!=0){
@@ -39,12 +47,19 @@ public class Weapon : MonoBehaviour,IFireArms {
 				}
 			}
 		}
+		Debug.Log("Initial"+InitialMagCap);
 		delayFireTime++;
 	}
 	public void Reload(){
-		if(MagazineCapacity==0)
-			isEmpty=true;
+		if(AmmoSum>0){
+			if(MagazineCapacity<InitialMagCap){
+				DeductedFromSum=InitialMagCap-MagazineCapacity;
+				AmmoSum-=DeductedFromSum;
+
+				MagazineCapacity=InitialMagCap;
+		}
 	}
+}
 	public void RecoilPattern(){
 		
 	}

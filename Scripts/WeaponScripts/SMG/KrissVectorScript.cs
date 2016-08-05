@@ -5,15 +5,19 @@ public class KrissVectorScript : Primary {
 
 	// Use this for initialization
 	void Start () {
-		MagazineCapacity=30;
+		InitialMagCap=30;
+
+		MagazineCapacity=InitialMagCap;
 		AmmoSum=300;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Shoot (5000,2,5,false);
-	
 
-		Debug.Log(""+MagazineCapacity);
+		if(Input.GetKeyDown(KeyCode.R))
+			Reload();
+
+		Debug.Log("Magazine Capacity: "+MagazineCapacity+" Total Ammo:"+AmmoSum);
 	}
 }

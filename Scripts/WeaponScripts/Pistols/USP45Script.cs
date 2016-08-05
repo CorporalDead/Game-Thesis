@@ -2,10 +2,12 @@
 using System.Collections;
 
 public class USP45Script:Secondary{
-
 	// Use this for initialization
 	void Start(){
-		MagazineCapacity=12;
+
+		InitialMagCap=12;
+
+		MagazineCapacity=InitialMagCap;
 		AmmoSum=120;
 	}
 	// Update is called once per frame
@@ -15,6 +17,6 @@ public class USP45Script:Secondary{
 		if(Input.GetKeyDown(KeyCode.R))
 			Reload();
 
-		Debug.Log(""+MagazineCapacity);
+		Debug.Log("Magazine Capacity: "+MagazineCapacity+" Deducted"+DeductedFromSum+"Total Ammo:"+AmmoSum);
 	}
 }

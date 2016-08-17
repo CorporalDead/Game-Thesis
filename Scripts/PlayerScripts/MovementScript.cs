@@ -21,6 +21,7 @@ public class MovementScript : MonoBehaviour {
 	private float playerRotY;
 	private float FieldOfViewValue;
 	private float runTimer;
+	private float Momentum;
 	private bool isJumping;
 	private bool isWallRunning;
 	private bool isWallRunningLeft;
@@ -55,7 +56,6 @@ public class MovementScript : MonoBehaviour {
 		if(!PauseMenuReference.getPaused()){
 			float ForwardBackward=Input.GetAxis("Vertical")*playerSpeed;
 			float LeftRight=Input.GetAxis("Horizontal")*playerSpeed;
-	 
 
 			playerRotX+=Input.GetAxis("Mouse Y")*1f;
 			//correcting rotation so player will not bend over (and break their necks)
@@ -70,7 +70,8 @@ public class MovementScript : MonoBehaviour {
 			if(playerController.isGrounded){
 				//Character Sprint
 				if(Input.GetButton("Sprint")&&ForwardBackward>0){
-					ForwardBackward+=playerSpeed;
+					if(playerSpeed<=6)
+						playerSpeed+=0.1f;
 					
 					if(playerCamera.fieldOfView<FieldOfViewValue+10f)
 						playerCamera.fieldOfView+=0.5f;
@@ -79,7 +80,7 @@ public class MovementScript : MonoBehaviour {
 				}else{
 					if(playerCamera.fieldOfView>FieldOfViewValue)
 						playerCamera.fieldOfView-=0.5f;
-
+					playerSpeed=3;
 					isSprinting=false;
 				}
 				
@@ -105,6 +106,7 @@ public class MovementScript : MonoBehaviour {
 					if(playerCamGO.transform.localEulerAngles.z<=345f&&playerCamGO.transform.localEulerAngles.z!=0f)
 						playerCamGO.transform.Rotate(0,0,-1);
 				}else{
+					if(ForwardBackward>6){
 					if(isWallRunningLeft){
 						if(Input.GetKeyDown(KeyCode.Space)){
 							//Debug.Log("Jump On");
@@ -144,6 +146,7 @@ public class MovementScript : MonoBehaviour {
 				}
 					Direction.y-=4f*Time.deltaTime;
 			}
+		}
 				//force player to stop wallrunning 
 				if(runTimer<0){
 					isJumping=false;
@@ -163,7 +166,7 @@ public class MovementScript : MonoBehaviour {
 			Debug.DrawRay(playerCamGO.transform.position,playerCamGO.transform.right,Color.green);
 			
 			//check left side if player is touching a wall
-			if(Physics.Raycast(playerCamGO.transform.position,-(playerCamGO.transform.right),out leftRay,1.4f)&&(isJumping&&Input.GetButton("Sprint"))){
+			if(Physics.Raycast(playerCamGO.transform.position,-(playerCamGO.transform.right),out leftRay,1.4f)&&(isJumping&&Input.GetButton("Sprint")&&ForwardBackward>6)){
 				isWallRunningLeft=true;
 				isWallRunning=true;
 			}else{
@@ -172,7 +175,7 @@ public class MovementScript : MonoBehaviour {
 				isWallRunning=false;
 			}
 			//check right side if player is touching a wall
-			if(Physics.Raycast(playerCamGO.transform.position,playerCamGO.transform.right,out rightRay,1.4f)&&(isJumping&&Input.GetButton("Sprint"))){
+			if(Physics.Raycast(playerCamGO.transform.position,playerCamGO.transform.right,out rightRay,1.4f)&&(isJumping&&Input.GetButton("Sprint")&&ForwardBackward>6)){
 				isWallRunningRight=true;
 				isWallRunning=true;
 			}else{
@@ -182,6 +185,7 @@ public class MovementScript : MonoBehaviour {
 			}
 			//carry items
 			CarryMethod();
+			Debug.Log(ForwardBackward);
 		}
 	}
 

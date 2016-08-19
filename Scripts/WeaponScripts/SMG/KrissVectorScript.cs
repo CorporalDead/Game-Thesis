@@ -13,7 +13,7 @@ public class KrissVectorScript : Primary {
 	
 	// Update is called once per frame
 	void Update () {
-		Shoot (5000,2,5,false);
+		Shoot (5500,2,2,false);
 
 		if(Input.GetKeyDown(KeyCode.R))
 			Reload();

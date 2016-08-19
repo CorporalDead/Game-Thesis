@@ -34,9 +34,9 @@ public class Dismemberment : MonoBehaviour {
 		}
 
 		//for debugging purposes; forcing kinematics
-		if(Input.GetKeyDown(KeyCode.Alpha1))
+		if(Input.GetKeyDown(KeyCode.Alpha3))
 			isAlive=false;
-		if(Input.GetKeyDown(KeyCode.Alpha2))
+		if(Input.GetKeyDown(KeyCode.Alpha4))
 			isAlive=true;
 	}
 	public void setLeftForearmActive(bool leftForearmActive){

@@ -12,7 +12,8 @@ public class USP45Script:Secondary{
 	}
 	// Update is called once per frame
 	void Update () {
-		Shoot(3000,1,10,true); //Shoot(int MagazineCapacity, int ammocapacity,float force,float damage, float rateOfFire, bool isSemiAuto);
+		Shoot(4500,1,10,true); //Shoot(float force, float damage, float rate of fire, bool isSemiAuto)
+
 	//	WeaponReference.Reload(30,90); //Reload(int magazinecapacity, int ammocount);
 		if(Input.GetKeyDown(KeyCode.R))
 			Reload();

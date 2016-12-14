@@ -1,4 +1,0 @@
-if(Upload == "successful")
-{
-	Debug.Log("YAY!!!");
-}

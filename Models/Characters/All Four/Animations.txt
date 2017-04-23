@@ -26,3 +26,18 @@ Reload		310-440		789-859		1210-1330
 L86		460-480
 M27 IAR				880-900
 M240B						1340-1350
+
+BladeMaster	Blade		L86
+Idle		0-40		440-479
+Forward 	50-90		489-529
+Wall Left	100-120		539-559
+Wall Right	130-150		569-589
+Left		160-200		599-639
+Right		210-250		649-689
+Backward	260-300		699-739
+Reload				749-829
+Attack 1	310-330		
+Attack 2	340-360
+Attack 3	370-390
+L86		400-440
+Blade				840-860
